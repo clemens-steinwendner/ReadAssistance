@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block head%}
+<h1>
+    Chinese Sentence Generator
+</h1>
+{% endblock %}
+
+{% block body %}
+
+    <div id="sentence-container"> {{story|safe}} </div>
+
+    <button id = "new-sentence-button"> Generate New Sentence </button>
+
+    <div id ="story-container"> {{full_story_html|safe}} </div>
+
+    <script>
+
+        function showPopover(wordE1, pinyin, translation){
+            let popup = document.getElementById("popup");
+
+            if (!popup){
+                popup = document.createElement("div");
+                popup.id = "popup";
+                popup.style.position = "absolute";
+                popup.style.backgroundColor = "white";
+                popup.style.border = "1px solid #333";
+                popup.style.padding = "6px";
+                popup.style.borderRadius = "4px";
+                popup.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+                popup.style.display = "none";
+
+                document.body.appendChild(popup)
+            }
+
+            popup.innerHTML = `
+                <strong> Pinyin: </strong> ${pinyin}<br>
+                <strong> Translation: </strong> ${translation}`;
+            
+                const rect = wordE1.getBoundingClientRect();
+                popup.style.left = (rect.left + window.scrollX)+"px";
+                popup.style.top = (rect.bottom + window.scrollY + 5)+"px";
+
+                popup.style.display = "block";
+
+        }
+
+        function attachWordListeners(){
+            document.querySelectorAll('.word').forEach(wordE1 => {
+                wordE1.addEventListener('click', () => {
+
+                    document.querySelectorAll('.word').forEach(e1 => {
+                        e1.classList.remove('highlight');
+                    })
+                    
+                    wordE1.classList.add('highlight');
+
+                    const word = wordE1.dataset.word;
+                    fetch(`/lookup?word=${encodeURIComponent(word)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        showPopover(wordE1, data.pinyin, data.translation);
+                    })
+                    .catch(err => console.error("Error:", err));
+                })
+            })
+        }
+
+        document.getElementById("new-sentence-button").addEventListener("click", function(){
+            fetch("/generate")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("sentence-container").innerHTML = data.sentence;
+                    
+                    attachWordListeners();
+                })
+                .catch(error => console.error("Error:", error))
+        })
+
+        document.addEventListener("clidk", (e) => {
+            const popup = document.getElementById("popup");
+            if (!popup) return;
+
+            if (!e.target.classList.contains("word") && e.target.id !== "popup"){
+                popup.style.display = "none";
+            }
+        })
+
+        document.addEventListener('DOMContentLoaded', attachWordListeners);
+    </script>
+
+{% endblock %}
