@@ -51,7 +51,7 @@ def get_pinyin_translation(word):
 @app.route('/')
 def index():
 
-    sentence = "我喜欢喝水"
+    sentence = "中国故事生成器"
 
     segments = list(jieba.cut(sentence))
 
@@ -62,21 +62,18 @@ def index():
             html_segments.append(seg)
         else:
 
-            pinyin, translation = get_pinyin_translation(seg)
+            #pinyin, translation = get_pinyin_translation(seg)
 
 
             html_segments.append(
-                f'<span class="word" '
-                f'data-pinyin="{pinyin}" '
-                f'data-translation="{translation}">'
-                f'{seg}</span>'
+                f'<span class="word" data-word="{seg}">{seg}</span>'
             )
 
     final_html = ''.join(html_segments)
 
     #full_story = generate_story()
 
-    full_story = "我喜欢喝水" #for testing
+    full_story = "" #for testing
 
     segments_story = list(jieba.cut(full_story))
 
@@ -87,14 +84,11 @@ def index():
             html_segments_story.append(seg)
         else:
 
-            pinyin, translation = get_pinyin_translation(seg)
+            #pinyin, translation = get_pinyin_translation(seg)
 
 
             html_segments_story.append(
-                f'<span class="word" '
-                f'data-pinyin="{pinyin}" '
-                f'data-translation="{translation}">'
-                f'{seg}</span>'
+                f'<span class="word" data-word="{seg}">{seg}</span>'
             )
 
     final_html_story = ''.join(html_segments_story)
@@ -112,7 +106,7 @@ def generate():
 
     
 
-    print("generating..." + hsk_level)
+    #print("generating..." + hsk_level)
 
     segments = list(jieba.cut(new_story))
 
@@ -123,21 +117,23 @@ def generate():
             html_segments.append(seg)
         else:
 
-            pinyin, translation = get_pinyin_translation(seg)
-
-
             html_segments.append(
-                f'<span class="word" '
-                f'data-pinyin="{pinyin}" '
-                f'data-translation="{translation}">'
-                f'{seg}</span>'
+                f'<span class="word" data-word="{seg}">{seg}</span>'
             )
 
     final_html = ''.join(html_segments)
 
     return jsonify({'sentence': final_html})
 
-
+@app.route('/translate_all', methods=['POST'])
+def translate_all():
+    data = request.get_json()
+    words = data['words']
+    result_map = {}
+    for w in words:
+        p, t = get_pinyin_translation(w)
+        result_map[w] = {'pinyin': p, 'translation':t}
+    return jsonify(result_map)
 
 #@app.route('/lookup')
 #def lookup():
@@ -152,7 +148,6 @@ def generate():
 #
 #
 #    return jsonify({'pinyin': pinyin_str, 'translation': translation})
-
 
 
 if __name__ == '__main__':

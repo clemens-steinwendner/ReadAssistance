@@ -1,6 +1,7 @@
 body{
     margin: 10;
     font-family: sans-serif;
+    background-color: #eae4dd;
 }
 
 .word.highlight{
@@ -12,4 +13,81 @@ body{
     text-decoration-color: silver;
     text-decoration-thickness: 2px;
     margin: 5px;
+}
+
+h1{
+    text-align: center
+}
+
+#sentence-container{
+    text-align: center;
+    font-size : 30px;
+    margin-bottom : 50px;
+}
+
+
+
+#for-button{
+    margin: 10px auto;
+    text-align: center;
+}
+
+#new-sentence-button{
+    color : black;
+    text-align: center;
+    margin: 10px auto;
+}
+
+.container{
+    text-align: center;
+}
+
+#story-container{
+    border: 2px solid grey;
+    padding: 10px;
+    margin: auto;
+    min-width: 300px;
+    width: 50%;
+    text-align: left;
+    min-height: 200px;
+    font-size: 20px;
+}
+
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border: 3px solid #d32f2f; /* Chinese red */
+    border-top-color: #ffcc00; /* Gold */
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+    box-shadow: 0 0 10px rgba(211,47,47,0.3);
+    font-size: 24px;
+    color: #d32f2f;
+    font-weight: bold;
+    position: relative;
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.loader::after {
+    content: '中';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
