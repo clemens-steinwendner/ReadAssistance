@@ -70,14 +70,14 @@
             fetch("/generate")
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById("sentence-container").innerHTML = data.sentence;
+                    document.getElementById("story-container").innerHTML = data.sentence;
                     
                     attachWordListeners();
                 })
                 .catch(error => console.error("Error:", error))
         })
 
-        document.addEventListener("clidk", (e) => {
+        document.addEventListener("click", (e) => {
             const popup = document.getElementById("popup");
             if (!popup) return;
 

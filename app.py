@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, jsonify, request
-from story_generator import generate_sentence
+from story_generator import generate_sentence, generate_story
 from pypinyin import pinyin, Style
 import jieba
 
@@ -22,7 +22,9 @@ def index():
 
     final_html = ''.join(html_segments)
 
-    full_story = "一天，小白去河边。河里有一条大鱼。小白看鱼，很高兴"
+    #full_story = generate_story()
+
+    full_story = "我喜欢喝水" #for testing
 
     segments_story = list(jieba.cut(full_story))
 
@@ -42,9 +44,10 @@ def index():
 @app.route('/generate')
 def generate():
     #new_sentence = generate_sentence()
-    new_sentence = "我喜欢"
+    #new_story = generate_story()
+    new_story = "我喜欢喝水" #for testing
 
-    segments = list(jieba.cut(new_sentence))
+    segments = list(jieba.cut(new_story))
 
     html_segments = [] 
 

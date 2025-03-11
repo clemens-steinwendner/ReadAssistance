@@ -18,6 +18,16 @@ def generate_sentence():
     result = stream.choices[0].message.content
     return result
 
+story_system_prompt = "Your task is to write a short story of around five sentences in simplified chinese. Use only HSK 1 vocabulary as much as possible. Make the story interesting."
+
+def generate_story():
+    stream = client.chat.completions.create(model = "gpt-4o-mini",
+                                            messages = [{"role": "developer", "content": story_system_prompt}],
+                                            stream = False)
+    
+    return stream.choices[0].message.content
+    
+
 stream = client.chat.completions.create(model = "gpt-4o-mini",
                                             messages=[{"role": "developer", "content": system_message }],
                                             stream = False)

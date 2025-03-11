@@ -6,3 +6,10 @@ body{
 .word.highlight{
     background-color: yellow;
 }
+
+.word{
+    text-decoration: underline;
+    text-decoration-color: silver;
+    text-decoration-thickness: 2px;
+    margin: 5px;
+}
