@@ -10,7 +10,21 @@
 
     <div id="sentence-container"> {{story|safe}} </div>
 
+    <label for = "hsk-level"> Select HSK Level:</label>
+    <select id = "hsk-level">
+        <option value = "1"> HSK 1</option>
+        <option value = "2"> HSK 2</option>
+        <option value = "3"> HSK 3</option>
+        <option value = "4"> HSK 4</option>
+        <option value = "5"> HSK 5</option>
+        <option value = "6"> HSK 6</option>
+    </select>
+
     <button id = "new-sentence-button"> Generate New Sentence </button>
+
+    <div id = "spinner" style = "display:none">
+        <p> Loading ... </p>
+    </div>
 
     <div id ="story-container"> {{full_story_html|safe}} </div>
 
@@ -66,14 +80,25 @@
         }
 
         document.getElementById("new-sentence-button").addEventListener("click", function(){
-            fetch("/generate")
+
+            const hskLevel = document.getElementById("hsk-level").value;
+
+            document.getElementById("spinner").style.display = "block";
+            fetch(`/generate?hsk_level=${hskLevel}`)
                 .then(response => response.json())
                 .then(data => {
+
+                    document.getElementById("spinner").style.display = "none";
+
                     document.getElementById("story-container").innerHTML = data.sentence;
                     
                     attachWordListeners();
                 })
-                .catch(error => console.error("Error:", error))
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById("spinner").style.display = "none";
+                })
+                
         })
 
         document.addEventListener("click", (e) => {
