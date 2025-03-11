@@ -2,8 +2,10 @@ from flask import Flask, render_template, url_for, jsonify, request
 from story_generator import generate_sentence, generate_story
 from pypinyin import pinyin, Style
 import jieba
+import translators as ts
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def index():
@@ -68,7 +70,10 @@ def lookup():
     pinyin_list = pinyin(word, style = Style.TONE)
     pinyin_str = ' '.join([item[0] for item in pinyin_list])
 
-    translation = "bruvver"
+
+
+    translation = ts.translate_text(query_text=word, translator = 'alibaba', from_language='zh-CHS', to_language='en').lower
+
 
     return jsonify({'pinyin': pinyin_str, 'translation': translation})
 
