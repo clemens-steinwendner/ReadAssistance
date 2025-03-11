@@ -18,8 +18,17 @@ def index():
 
     for seg in segments:
         if seg.strip():
+            pinyin_list = pinyin(seg, style = Style.TONE)
+            pinyin_str = ' '.join([item[0] for item in pinyin_list])
+
+            translation = ts.translate_text(query_text=seg, translator = 'alibaba', from_language='zh-CHS', to_language='en').lower()
+
+
             html_segments.append(
-                f'<span class="word" data-word="{seg}">{seg}</span>'
+                f'<span class="word" '
+                f'data-pinyin="{pinyin_str}" '
+                f'data-translation="{translation}">'
+                f'{seg}</span>'
             )
 
     final_html = ''.join(html_segments)
@@ -34,8 +43,17 @@ def index():
 
     for seg in segments_story:
         if seg.strip():
+            pinyin_list = pinyin(seg, style = Style.TONE)
+            pinyin_str = ' '.join([item[0] for item in pinyin_list])
+
+            translation = ts.translate_text(query_text=seg, translator = 'alibaba', from_language='zh-CHS', to_language='en').lower()
+
+
             html_segments_story.append(
-                f'<span class="word" data-word="{seg}">{seg}</span>'
+                f'<span class="word" '
+                f'data-pinyin="{pinyin_str}" '
+                f'data-translation="{translation}">'
+                f'{seg}</span>'
             )
 
     final_html_story = ''.join(html_segments_story)
@@ -55,8 +73,18 @@ def generate():
 
     for seg in segments:
         if seg.strip():
+
+            pinyin_list = pinyin(seg, style = Style.TONE)
+            pinyin_str = ' '.join([item[0] for item in pinyin_list])
+
+            translation = ts.translate_text(query_text=seg, translator = 'alibaba', from_language='zh-CHS', to_language='en').lower()
+
+
             html_segments.append(
-                f'<span class="word" data-word="{seg}">{seg}</span>'
+                f'<span class="word" '
+                f'data-pinyin="{pinyin_str}" '
+                f'data-translation="{translation}">'
+                f'{seg}</span>'
             )
 
     final_html = ''.join(html_segments)
@@ -72,7 +100,7 @@ def lookup():
 
 
 
-    translation = ts.translate_text(query_text=word, translator = 'alibaba', from_language='zh-CHS', to_language='en').lower
+    translation = ts.translate_text(query_text=word, translator = 'alibaba', from_language='zh-CHS', to_language='en').lower()
 
 
     return jsonify({'pinyin': pinyin_str, 'translation': translation})

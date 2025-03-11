@@ -37,11 +37,11 @@
                 <strong> Pinyin: </strong> ${pinyin}<br>
                 <strong> Translation: </strong> ${translation}`;
             
-                const rect = wordE1.getBoundingClientRect();
-                popup.style.left = (rect.left + window.scrollX)+"px";
-                popup.style.top = (rect.bottom + window.scrollY + 5)+"px";
+            const rect = wordE1.getBoundingClientRect();
+            popup.style.left = (rect.left + window.scrollX)+"px";
+            popup.style.top = (rect.bottom + window.scrollY + 5)+"px";
 
-                popup.style.display = "block";
+            popup.style.display = "block";
 
         }
 
@@ -55,13 +55,12 @@
                     
                     wordE1.classList.add('highlight');
 
+                    const pinyin = wordE1.dataset.pinyin;
+                    const translation = wordE1.dataset.translation;
+
                     const word = wordE1.dataset.word;
-                    fetch(`/lookup?word=${encodeURIComponent(word)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        showPopover(wordE1, data.pinyin, data.translation);
-                    })
-                    .catch(err => console.error("Error:", err));
+                    
+                    showPopover(wordE1, pinyin, translation);
                 })
             })
         }
