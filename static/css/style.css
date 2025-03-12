@@ -25,8 +25,6 @@ h1{
     margin-bottom : 50px;
 }
 
-
-
 #for-button{
     margin: 10px auto;
     text-align: center;
@@ -90,4 +88,15 @@ h1{
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
+}
+
+#story-translated{
+    border: 2px solid grey;
+    padding: 10px;
+    margin: auto;
+    min-width: 300px;
+    width: 50%;
+    text-align: left;
+    min-height: 200px;
+    font-size: 20px;
 }

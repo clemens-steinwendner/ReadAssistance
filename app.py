@@ -4,6 +4,7 @@ from pypinyin import pinyin, Style
 import jieba
 import translators as ts
 from flask_sqlalchemy import SQLAlchemy
+import re
 
 app = Flask(__name__)
 
@@ -13,6 +14,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 punctuation_chars = set("，。！？；：,.!?;:")
+
+current_story = ""
 
 class WordCache(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -73,35 +76,22 @@ def index():
 
     #full_story = generate_story()
 
-    full_story = "" #for testing
-
-    segments_story = list(jieba.cut(full_story))
-
-    html_segments_story = []
-
-    for seg in segments_story:
-        if seg in punctuation_chars:
-            html_segments_story.append(seg)
-        else:
-
-            #pinyin, translation = get_pinyin_translation(seg)
 
 
-            html_segments_story.append(
-                f'<span class="word" data-word="{seg}">{seg}</span>'
-            )
 
-    final_html_story = ''.join(html_segments_story)
-
-
-    return render_template('index.html', story = final_html, full_story_html = final_html_story)
+    return render_template('index.html', story = final_html)
 
 @app.route('/generate')
 def generate():
     #new_sentence = generate_sentence()
 
+    global current_story
+
     hsk_level = request.args.get('hsk_level', '1')
     new_story = generate_story(hsk_level = hsk_level)
+
+
+    current_story = new_story
     #new_story = "我喜欢喝水" #for testing
 
     
@@ -134,6 +124,26 @@ def translate_all():
         p, t = get_pinyin_translation(w)
         result_map[w] = {'pinyin': p, 'translation':t}
     return jsonify(result_map)
+
+@app.route('/translate_story')
+def translate_story():
+    text = current_story
+
+    print(text)
+
+    translation_str = ts.translate_text(
+        query_text=text,
+        translator='alibaba',
+        from_language='zh-CHS',
+        to_language='en'
+    )
+    sentences = re.findall(r'[^.!?]+[.!?]', translation_str)
+
+    # Trim whitespace around each sentence
+    sentences = [s.strip() for s in sentences]
+
+    return jsonify({'sentences': sentences})
+    
 
 #@app.route('/lookup')
 #def lookup():

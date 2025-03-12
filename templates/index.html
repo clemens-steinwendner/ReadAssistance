@@ -23,7 +23,7 @@
     </div>
 
     <div id = "for-button">
-        <button id = "new-sentence-button"> Generate New Sentence </button>
+        <button id = "new-sentence-button"> Generate New Story </button>
     </div>
     
 
@@ -31,6 +31,8 @@
     </div>
 
     <div id ="story-container"> {{full_story_html|safe}} </div>
+
+    <div id = "story-translated">  </div>
 
     <script>
 
@@ -90,6 +92,55 @@
             })
         }
 
+        function fullTranslate(){
+            fetch('/translate_story')
+            .then(response => response.json())
+            .then(data => {
+                // data might look like { "translation": "some english text" }
+                const sentences = data.sentences
+
+                let html = sentences.map(s => {
+                    return `
+                        <div class="sentence-block" style="position: relative; margin-bottom: 1em;">
+                            <p class="english-sentence" style="margin: 0;">${s}</p>
+                            <div class="cover" style="
+                                position: absolute;
+                                top: 0; left: 0;
+                                width: 100%; height: 100%;
+                                background-color: gray;
+                                color: white;
+                                text-align: center;
+                                cursor: pointer;">
+                                Click to reveal/hide
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                document.getElementById("story-translated").innerHTML = html;
+
+                document.querySelectorAll('.cover').forEach(coverEl => {
+                    coverEl.addEventListener('click', () => {
+                        if (coverEl.style.display !== 'none') {
+                        coverEl.style.display = 'none';
+                        }
+                    });
+                    });
+                    document.querySelectorAll('.english-sentence').forEach(sentEl => {
+                    sentEl.addEventListener('click', () => {
+                        const coverEl = sentEl.parentNode.querySelector('.cover');
+                        if (coverEl && coverEl.style.display === 'none') {
+                        coverEl.style.display = 'block';
+                        }
+                    });
+                });
+                
+
+                
+            })
+            .catch(error => console.error("Error in fullTranslate:", error));
+        }
+
         function backgroundTranslate(){
             const uniqueWords = new Set();
             document.querySelectorAll('.word').forEach(e1 => {
@@ -133,6 +184,8 @@
                     attachWordListeners();
 
                     backgroundTranslate();
+
+                    fullTranslate();
                 })
                 .catch(error => {
                     console.error("Error:", error);
