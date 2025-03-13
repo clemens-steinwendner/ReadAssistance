@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, jsonify, request
-from story_generator import generate_sentence, generate_story
+from story_generator import generate_sentence, generate_story, generate_second_part
 from pypinyin import pinyin, Style
 import jieba
 import translators as ts
@@ -114,6 +114,36 @@ def generate():
     final_html = ''.join(html_segments)
 
     return jsonify({'sentence': final_html})
+
+@app.route('/generate_second')
+def generate_second():
+    global current_story
+
+    if(current_story == ""): return generate()
+
+    hsk_level = request.args.get('hsk_level', '1')
+
+    new_story = generate_second_part(current_story, hsk_level)
+
+    current_story = new_story
+
+    segments = list(jieba.cut(new_story))
+
+    html_segments = [] 
+
+    for seg in segments:
+        if seg in punctuation_chars:
+            html_segments.append(seg)
+        else:
+
+            html_segments.append(
+                f'<span class="word" data-word="{seg}">{seg}</span>'
+            )
+
+    final_html = ''.join(html_segments)
+
+    return jsonify({'sentence': final_html})
+
 
 @app.route('/translate_all', methods=['POST'])
 def translate_all():

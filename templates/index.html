@@ -24,7 +24,10 @@
 
     <div id = "for-button">
         <button id = "new-sentence-button"> Generate New Story </button>
+        <button id = "second-part-button"> Generate Second Part </button>
     </div>
+
+    
     
 
     <div id = "spinner" class = "loader" style = "display:none"></div>
@@ -185,6 +188,30 @@
                     document.getElementById("spinner").style.display = "none";
                 })
                 
+        })
+
+        document.getElementById("second-part-button").addEventListener("click", function(){
+            const hskLevel = document.getElementById("hsk-level").value
+
+            document.getElementById("spinner").style.display = "block";
+
+            fetch(`/generate_second?hsk_level = ${hskLevel}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("spinner").style.display = "none";
+
+                    document.getElementById("story-container").innerHTML = data.sentence;
+
+                    attachWordListeners();
+
+                    backgroundTranslate();
+
+                    fullTranslate();
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById("spinner").style.display = "none";
+                })
         })
 
         document.addEventListener("click", (e) => {

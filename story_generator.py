@@ -33,6 +33,18 @@ def generate_story(hsk_level):
     print(stream.choices[0].message.content)
     
     return stream.choices[0].message.content
+
+def generate_second_part(previous_story, hsk_level):
+    
+    second_part_prompt = f"Continue the following simplified Chinese story:\n\n{previous_story}\n\nWrite an engaging second part of approximately 5 sentences, suitable for language learners. Use only vocabulary and grammar at or below HSK level {hsk_level}, ensuring consistency in style, setting, and characters with the previous story. Clearly demonstrate practical language usage appropriate to the specified HSK proficiency level."
+
+    stream = client.chat.completions.create(model = "gpt-4o-mini",
+                                                messages = [{"role": "developer", "content": second_part_prompt}],
+                                                stream = False)
+
+    result2 = stream.choices[0].message.content
+
+    return result2
     
 
 stream = client.chat.completions.create(model = "gpt-4o-mini",
