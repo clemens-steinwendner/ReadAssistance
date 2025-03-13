@@ -3,9 +3,9 @@ A tool for users studying chinese that helps develop reading skills and help rei
 
 ## Features
 
-- **Story Generation: ** Integrated OpenAI API to generate short stories in simplified Chinese according to users HSK level
-- **Interactive Elements: ** Clickable words, can display pinyin and translation
-- **Translation Function: ** Translate single words and full-story
+- **Story Generation:** Integrated OpenAI API to generate short stories in simplified Chinese according to users HSK level
+- **Interactive Elements:** Clickable words, can display pinyin and translation
+- **Translation Function:** Translate single words and full-story
 
 
 ## Technologies Used
